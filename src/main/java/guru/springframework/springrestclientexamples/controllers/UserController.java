@@ -25,14 +25,20 @@ public class UserController {
 
     @PostMapping("/users")
     public String formPost(Model model, ServerWebExchange serverWebExchange) {
-        MultiValueMap<String, String> map = serverWebExchange.getFormData().toProcessor().block();
+//        MultiValueMap<String, String> map = serverWebExchange.getFormData().toProcessor().block();
+//
+//        Integer limit = Integer.parseInt(map.get("limit").get(0));
+//        if (limit == null || limit == 0) {
+//            limit = 10;
+//        }
 
-        Integer limit = Integer.parseInt(map.get("limit").get(0));
-        if (limit == null || limit == 0) {
-            limit = 10;
-        }
+//        model.addAttribute("users", apiService.getUsers(limit));
 
-        model.addAttribute("users", apiService.getUsers(limit));
+        model.addAttribute("users",
+                apiService
+                        .getUsers(serverWebExchange
+                                .getFormData()
+                                .map(data -> Integer.parseInt(data.getFirst("limit")))));
         return "userlist";
 
     }
